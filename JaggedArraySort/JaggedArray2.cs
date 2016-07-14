@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace JaggedArraySort
 {
-    public static class JaggedArray
+    class JaggedArray2
     {
-
         public delegate int ArrayComparer(int[] lhs, int[] rhs);
         public static void Sort(int[][] array, IComparer comparer)
+        {
+            ArrayComparer newcomparer = comparer.Compare;
+            Sort(array, newcomparer);
+        }
+
+        public static void Sort(int[][] array, ArrayComparer comparer)
         {
             if (array == null || comparer == null)
             {
@@ -21,7 +25,7 @@ namespace JaggedArraySort
             {
                 for (int j = i + 1; j < array.Length; j++)
                 {
-                    if (comparer.Compare(array[i], array[j]) < 0)
+                    if (comparer(array[i], array[j]) < 0)
                     {
                         Swap(array[i], array[j]);
                     }
@@ -29,19 +33,12 @@ namespace JaggedArraySort
             }
         }
 
-        public static void Sort(int[][] array, ArrayComparer comparer)
-        {
-            if (array == null || comparer == null)
-                throw new ArgumentNullException();
-            Sort(array, new Adapter(comparer));
-        }
-
         private class Adapter : IComparer
         {
 
-            private ArrayComparer comparer;
+            private JaggedArray.ArrayComparer comparer;
 
-            public Adapter(ArrayComparer comparer)
+            public Adapter(JaggedArray.ArrayComparer comparer)
             {
                 this.comparer = comparer;
             }
@@ -62,4 +59,5 @@ namespace JaggedArraySort
         }
 
     }
+}
 }
